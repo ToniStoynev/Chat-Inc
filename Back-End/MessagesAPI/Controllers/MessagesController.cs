@@ -4,8 +4,8 @@
     using MessagesAPI.Domain;
     using MessagesAPI.Models;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -35,10 +35,13 @@
                 return this.BadRequest();
             }
 
+            var user = await this.context.Users
+                .SingleOrDefaultAsync(username => username.Username == message.User);
+
             var messageForDb = new Message
             {
                 Content = message.Content,
-                User = message.User,
+                User = user,
                 CreatedOn = DateTime.UtcNow
             };
 
